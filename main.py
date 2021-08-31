@@ -26,13 +26,9 @@ for new_art in News.get_news(nowYMD):
     new_articles.append(article)
 
 for art in range(0, 5):
-    formatted_title = new_articles[art].title.replace('\u2026', "'")
-    formatted_author = new_articles[art].author.replace('\u2026', "'")
-    formatted_desc = new_articles[art].description.replace('\u2026', "'")
-
-    news_information = f'Title: {formatted_title}\n' \
-                       f'Author: {formatted_author}\n\n' \
-                       f'{formatted_desc}\n\n' \
+    news_information = f'Title: {new_articles[art].title}\n' \
+                       f'Author: {new_articles[art].author}\n\n' \
+                       f'{new_articles[art].description}\n\n' \
                        f'Find out more: {new_articles[art].url}'
     today_articles.append(news_information)
 
@@ -62,6 +58,6 @@ with smtplib.SMTP(GMAIL_SMTP) as connection:
     connection.sendmail(
         from_addr=MAIN_EMAIL,
         to_addrs=TEST_EMAIL,
-        msg=message
+        msg=message.encode('utf-8')
     )
     print('Sent.')
