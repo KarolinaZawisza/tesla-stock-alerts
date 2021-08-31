@@ -20,3 +20,12 @@ class News:
         }
         news_data = requests.get(url='https://newsapi.org/v2/everything', params=parameters).json()
         return news_data['articles']
+
+    @staticmethod
+    def create_article(title: str, author: str, description: str, url: str) -> str:
+        news_information = f'Title: {title}\n' \
+                            f'Author: {author}\n\n' \
+                            f'{description}\n\n' \
+                            f'Find out more: {url}'
+
+        return news_information
