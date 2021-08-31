@@ -1,8 +1,7 @@
-import smtplib
 from tesla_stocks import get_stock_data
 from news import News
 import datetime as dt
-from env import MAIN_EMAIL, MAIN_EMAIL_PASSWORD, TEST_EMAIL, GMAIL_SMTP
+from mailer import send_mail
 
 news_information: str
 today_articles = []
@@ -26,10 +25,10 @@ for new_art in News.get_news(nowYMD):
     new_articles.append(article)
 
 for art in range(0, 5):
-    news_information = f'Title: {new_articles[art].title}\n' \
-                       f'Author: {new_articles[art].author}\n\n' \
-                       f'{new_articles[art].description}\n\n' \
-                       f'Find out more: {new_articles[art].url}'
+    news_information = News.create_article(new_articles[art].title,
+                                           new_articles[art].author,
+                                           new_articles[art].description,
+                                           new_articles[art].url)
     today_articles.append(news_information)
 
 last_prices = get_stock_data()
@@ -52,12 +51,4 @@ message = f'SUBJECT: Daily stock information: TESLA ({nowDMY})\n' \
           f'{today_articles[1]}\n\n\n' \
           f'{today_articles[2]}'
 
-with smtplib.SMTP(GMAIL_SMTP) as connection:
-    connection.starttls()
-    connection.login(user=MAIN_EMAIL, password=MAIN_EMAIL_PASSWORD)
-    connection.sendmail(
-        from_addr=MAIN_EMAIL,
-        to_addrs=TEST_EMAIL,
-        msg=message.encode('utf-8')
-    )
-    print('Sent.')
+send_mail(message)
