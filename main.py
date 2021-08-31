@@ -1,14 +1,20 @@
 import smtplib
 from tesla_stocks import get_stock_data
 from news import News
-from today_date import get_date
+import datetime as dt
+from env import MAIN_EMAIL, MAIN_EMAIL_PASSWORD, TEST_EMAIL, GMAIL_SMTP
 
 news_information: str
 today_articles = []
 stock_information = ''
 
+# YYYY-MM-DD for getting news
+nowYMD = dt.datetime.now().strftime('%Y-%m-%d')
+# DD.MM.YYYY for subject of the message
+nowDMY = dt.datetime.now().strftime('%d.%m.%Y')
+
 new_articles = []
-for new_art in News.get_news(get_date()[1]):
+for new_art in News.get_news(nowYMD):
     article = News(
         new_art['author'],
         new_art['title'],
@@ -41,7 +47,7 @@ elif stock_value_difference < 0:
     stock_information = f'Tesla\'s stock value drop for {round(stock_value_difference, 3)}' \
                         f' ({round(percentage_diff, 2)}%) till yesterday closing!'
 
-message = f'SUBJECT: Daily stock information: TESLA ({get_date()[0]})\n' \
+message = f'SUBJECT: Daily stock information: TESLA ({nowDMY})\n' \
           f'Welcome to daily stock information for TESLA!\n' \
           f'Current Tesla\'s stock value: {last_prices[2]}\n' \
           f'{stock_information}\n\n\n' \
@@ -50,12 +56,12 @@ message = f'SUBJECT: Daily stock information: TESLA ({get_date()[0]})\n' \
           f'{today_articles[1]}\n\n\n' \
           f'{today_articles[2]}'
 
-with smtplib.SMTP('smtp.gmail.com') as connection:
+with smtplib.SMTP(GMAIL_SMTP) as connection:
     connection.starttls()
-    connection.login(user='example@egmail.com', password='asdasdasd')
+    connection.login(user=MAIN_EMAIL, password=MAIN_EMAIL_PASSWORD)
     connection.sendmail(
-        from_addr='example@egmail.com',
-        to_addrs='anotherexample@email.com',
+        from_addr=MAIN_EMAIL,
+        to_addrs=TEST_EMAIL,
         msg=message
     )
     print('Sent.')
