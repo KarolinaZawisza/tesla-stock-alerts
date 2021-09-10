@@ -1,27 +1,16 @@
+from date_manager import DateManager
 from tesla_stocks import get_stock_data
 from news import News
-import datetime as dt
 from mailer import send_mail
+
 
 news_information: str
 today_articles = []
 stock_information = ''
 
-# YYYY-MM-DD for getting news
-nowYMD = dt.datetime.now().strftime('%Y-%m-%d')
-# DD.MM.YYYY for subject of the message
-nowDMY = dt.datetime.now().strftime('%d.%m.%Y')
-
 new_articles = []
-for new_art in News.get_news(nowYMD):
-    article = News(
-        new_art['author'],
-        new_art['title'],
-        new_art['description'],
-        new_art['content'],
-        new_art['url'],
-        new_art['publishedAt'],
-    )
+for next_article in News.get_news(DateManager.get_today_date_format_ymd()):
+    article = News.create_news_from_raw_data(next_article)
     new_articles.append(article)
 
 for art in range(0, 5):
@@ -42,7 +31,7 @@ elif stock_value_difference < 0:
     stock_information = f'Tesla\'s stock value drop for {round(stock_value_difference, 3)}' \
                         f' ({round(percentage_diff, 2)}%) till yesterday closing!'
 
-message = f'SUBJECT: Daily stock information: TESLA ({nowDMY})\n' \
+message = f'SUBJECT: Daily stock information: TESLA ({DateManager.get_today_date_format_dmy()})\n' \
           f'Welcome to daily stock information for TESLA!\n' \
           f'Current Tesla\'s stock value: {last_prices[2]}\n' \
           f'{stock_information}\n\n\n' \
