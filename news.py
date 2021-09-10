@@ -1,5 +1,6 @@
 import requests
 
+
 class News:
 
     def __init__(self, author, title, description, content, url, published_at):
@@ -9,6 +10,17 @@ class News:
         self.content = content
         self.url = url
         self.published_at = published_at
+
+    @staticmethod
+    def create_news_from_raw_data(next_article):
+        return News(
+            next_article['author'],
+            next_article['title'],
+            next_article['description'],
+            next_article['content'],
+            next_article['url'],
+            next_article['publishedAt'],
+            )
 
     @staticmethod
     def get_news(date: str) -> list:

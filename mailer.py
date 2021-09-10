@@ -1,6 +1,7 @@
 from env import MAIN_EMAIL, MAIN_EMAIL_PASSWORD, TEST_EMAIL, GMAIL_SMTP
 import smtplib
 
+
 def send_mail(message):
     with smtplib.SMTP(GMAIL_SMTP) as connection:
         connection.starttls()

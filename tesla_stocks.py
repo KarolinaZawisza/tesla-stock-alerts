@@ -1,6 +1,7 @@
 import requests
 from env import ALPHA_API_KEY
 
+
 def get_stock_data() -> list:
     parameters = {
         'function': 'TIME_SERIES_DAILY_ADJUSTED',
